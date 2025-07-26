@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Absolute Statistics Calculator
+Equilibrium Statistic Calculator
 A Python app that recursively calculates mean, median, and mode until convergence.
 """
 
@@ -95,7 +95,7 @@ def format_values(values: List[float], precision: int = 6) -> str:
     return [round(v, precision) for v in values]
 
 
-def absolute_statistics(initial_data: List[float], epsilon: Union[float, str] = 0.001, show_graph: bool = False) -> \
+def equilibrium_statistic(initial_data: List[float], epsilon: Union[float, str] = 0.001, show_graph: bool = False) -> \
 Tuple[float, List[List[float]]]:
     """
     Calculate the absolute statistic by recursively applying mean, median, mode
@@ -113,7 +113,7 @@ Tuple[float, List[List[float]]]:
 
     stagnation_only = (epsilon == '*')
 
-    print(f"🧮 Starting Absolute Statistics Calculation")
+    print(f"🧮 Starting Equilibrium Statistic Calculation")
     print(f"📊 Initial Dataset: {format_values(initial_data)}")
     if stagnation_only:
         print(f"🎯 Mode: Stagnation-only (run until 1000 identical iterations)")
@@ -226,9 +226,9 @@ def plot_convergence(iteration_history: List[List[float]], epsilon: Union[float,
     plt.ylabel('Value', fontsize=12, fontweight='bold')
 
     if stagnation_only:
-        plt.title('Absolute Statistics Convergence (Stagnation Mode)', fontsize=16, fontweight='bold')
+        plt.title('Equilibrium Statistic Convergence (Stagnation Mode)', fontsize=16, fontweight='bold')
     else:
-        plt.title('Absolute Statistics Convergence', fontsize=16, fontweight='bold')
+        plt.title('Equilibrium Statistic Convergence', fontsize=16, fontweight='bold')
 
     plt.grid(True, alpha=0.3)
     plt.legend(loc='best', frameon=True, fancybox=True, shadow=True)
@@ -257,7 +257,7 @@ def plot_convergence(iteration_history: List[List[float]], epsilon: Union[float,
 def get_user_input() -> Tuple[List[float], Union[float, str], bool]:
     """Get dataset, epsilon (or '*' for stagnation-only), and graph preference from user input."""
 
-    print("🧑‍💻 Absolute Statistics Calculator")
+    print("🧑‍💻 Equilibrium Statistic Calculator")
     print("=" * 50)
 
     # Get dataset
@@ -321,7 +321,7 @@ def main():
         print("\n" + "=" * 60)
 
         # Calculate absolute statistic
-        result, history = absolute_statistics(data, epsilon, show_graph=show_graph)
+        result, history = equilibrium_statistic(data, epsilon, show_graph=show_graph)
 
         print("=" * 60)
         print(f"🏆 FINAL RESULT: The Absolute Statistic is {round(result, 6)}")
