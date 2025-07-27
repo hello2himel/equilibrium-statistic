@@ -1,5 +1,5 @@
 
-# 🧮 Absolute Statistics
+# 🧮 Equilibrium Statistic
 
 > A recursive statistical model for central tendency convergence  
 > Developed by **Himel Das** | 🇧🇩 Bangladesh | `hello2himel@outlook.com`
@@ -8,9 +8,9 @@
 
 ## 📖 Overview
 
-**Absolute Statistics** is a novel approach to central tendency estimation that recursively applies the classical statistical measures — **mean**, **median**, and **mode** — until they converge to a unified value. This converged value, called the **Absolute Statistic**, captures a balanced and harmonized center of a dataset, synthesizing sensitivity, robustness, and frequency.
+**Equilibrium Statistic** is a novel approach to central tendency estimation that recursively applies the classical statistical measures — **mean**, **median**, and **mode** — until they converge to a unified value. This converged value, called the **Equilibrium Statistic**, captures a balanced and harmonized center of a dataset, synthesizing sensitivity, robustness, and frequency.
 
-The project is implemented in **Python** as a command-line tool. It accepts numeric input from the user and iteratively refines the dataset using its own central statistics until all values fall within a specified threshold (`epsilon`).
+The project is implemented in **Python** as a command-line tool. It accepts numeric input from the user and iteratively refines the dataset using its own central statistic until all values fall within a specified threshold (`epsilon`).
 
 ---
 
@@ -26,7 +26,7 @@ These three are often used separately to describe different aspects of data. How
 
 ---
 
-### 🧪 Definition of the Absolute Statistic
+### 🧪 Definition of the Equilibrium Statistic
 
 Let the initial dataset be:
 
@@ -64,7 +64,7 @@ max(|meanₖ - medianₖ|, |medianₖ - modeₖ|, |modeₖ - meanₖ|) < ε
 
 Where **ε (epsilon)** is a convergence threshold, e.g., `0.001`.
 
-The final stabilized value — the average of the last three — is called the **Absolute Statistic**.
+The final stabilized value — the average of the last three — is called the **Equilibrium Statistic**.
 
 ---
 
@@ -72,7 +72,7 @@ The final stabilized value — the average of the last three — is called the *
 
 This tool is implemented with:
 
-- `statistics` — for mean and median
+- `statistic` — for mean and median
 - `collections.Counter` — for robust mode detection
 - Custom convergence logic with adjustable precision
 - Exception handling for multimodal and unique-value scenarios
@@ -81,7 +81,7 @@ This tool is implemented with:
 The logic is split into functions:
 - `calculate_mean`, `calculate_median`, `calculate_mode`
 - `check_convergence` — determines whether values are close enough
-- `absolute_statistics` — main recursive engine
+- `equilibrium_statistic` — main recursive engine
 - `get_user_input` — interactive CLI prompt
 
 Each iteration is printed to the console for transparency and traceability.
@@ -100,9 +100,9 @@ Each iteration is printed to the console for transparency and traceability.
 Clone the repository and run the script:
 
 ```bash
-git clone https://github.com/yourusername/absolute-statistics.git
-cd absolute-statistics
-python3 absolute_statistics.py
+git clone https://github.com/hello2himel/equilibrium-statistic.git
+cd equilibrium-statistic
+python3 main.py
 ````
 
 ### 📥 Input Example:
@@ -127,7 +127,7 @@ Iteration 1:
 ...
 
 ✅ CONVERGENCE ACHIEVED after 4 iterations!
-🎯 Absolute Statistic: 15.958333
+🎯 Equilibrium Statistic: 15.958333
 ```
 
 ---
@@ -144,7 +144,7 @@ Iteration 1:
 
 ## 🧭 Planned Research & Development
 
-The Absolute Statistics model presents opportunities for both theoretical exploration and real-world application. Below is a structured roadmap outlining future development goals across mathematical foundations, empirical validation, software tooling, and academic dissemination.
+The Equilibrium Statistic model presents opportunities for both theoretical exploration and real-world application. Below is a structured roadmap outlining future development goals across mathematical foundations, empirical validation, software tooling, and academic dissemination.
 
 ---
 
@@ -171,7 +171,7 @@ The Absolute Statistics model presents opportunities for both theoretical explor
 ### 🏭 3. Real-World Application Domains
 
 - **Finance** — Stock returns, trading anomalies.
-- **Medicine** — Vital statistics, lab measurements.
+- **Medicine** — Vital statistic, lab measurements.
 - **Climate Science** — Sensor time series, anomaly detection.
 - **Education & Surveys** — Likert responses and opinion analysis.
 - **Manufacturing** — Tolerance analysis and quality control.
@@ -200,7 +200,7 @@ The Absolute Statistics model presents opportunities for both theoretical explor
 
 ### 📚 6. Academic Dissemination
 
-- **Formal Paper** — Write and submit to a statistics or applied math journal.
+- **Formal Paper** — Write and submit to a statistic or applied math journal.
 - **Literature Review** — Survey surrounding research for citations and background.
 - **Conference Presentation** — Share findings at relevant academic events.
 - **arXiv Preprint** — Share early versions with the research community.
@@ -233,7 +233,7 @@ The Absolute Statistics model presents opportunities for both theoretical explor
 
 ## 🧾 License
 
-MIT License. Maybe I'll change later.
+MIT License.
 
 ---
 
@@ -253,9 +253,7 @@ SSC 2025 · Bogura Zilla School, Bogura, Bangladesh
 If you use this in research or teaching, please cite as:
 
 ```plaintext
-Das, H. (2025). Absolute Statistics: A Recursive Convergence Model for Central Tendency. GitHub Repository. https://github.com/hello2himel/equilibrium-statistic
+Das, H. (2025). Equilibrium Statistic: A Recursive Convergence Model for Central Tendency. GitHub Repository. https://github.com/hello2himel/equilibrium-statistic
 ```
 
 ---
-
-Enjoy finding the *true center* of your data — not just statistically, but absolutely. ✨
