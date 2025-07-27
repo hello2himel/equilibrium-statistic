@@ -98,7 +98,7 @@ def format_values(values: List[float], precision: int = 6) -> str:
 def equilibrium_statistic(initial_data: List[float], epsilon: Union[float, str] = 0.001, show_graph: bool = False) -> \
 Tuple[float, List[List[float]]]:
     """
-    Calculate the absolute statistic by recursively applying mean, median, mode
+    Calculate the equilibrium statistic by recursively applying mean, median, mode
     until convergence within epsilon or stagnation.
 
     Args:
@@ -145,15 +145,15 @@ Tuple[float, List[List[float]]]:
 
         # Check for convergence (only if not in stagnation-only mode)
         if not stagnation_only and check_convergence(new_data, epsilon):
-            absolute_stat = sum(new_data) / len(new_data)  # Average of converged values
+            equilibrium_stat = sum(new_data) / len(new_data)  # Average of converged values
             print("-" * 60)
             print(f"✅ CONVERGENCE ACHIEVED after {iteration} iterations!")
-            print(f"🎯 Absolute Statistic: {round(absolute_stat, 6)}")
-            return absolute_stat, iteration_history
+            print(f"🎯 Equilibrium Statistic: {round(equilibrium_stat, 6)}")
+            return equilibrium_stat, iteration_history
 
         # Check for stagnation (always check, but behavior depends on mode)
         if check_stagnation(iteration_history):
-            absolute_stat = sum(new_data) / len(new_data)  # Average of stagnated values
+            equilibrium_stat = sum(new_data) / len(new_data)  # Average of stagnated values
 
             # Remove last 999 iterations from history for cleaner graphing
             if len(iteration_history) >= 1000:
@@ -166,8 +166,8 @@ Tuple[float, List[List[float]]]:
             else:
                 print(f"🔄 STAGNATION DETECTED after {iteration} iterations!")
                 print(f"   Values have been identical for the last 1000 iterations.")
-            print(f"🎯 Absolute Statistic: {round(absolute_stat, 6)}")
-            return absolute_stat, iteration_history
+            print(f"🎯 Equilibrium Statistic: {round(equilibrium_stat, 6)}")
+            return equilibrium_stat, iteration_history
 
         # Show progress info
         if stagnation_only:
@@ -219,7 +219,7 @@ def plot_convergence(iteration_history: List[List[float]], epsilon: Union[float,
 
     # Add final convergence line
     plt.axhline(y=final_value, color='black', linestyle='-', linewidth=2, alpha=0.8,
-                label=f'Absolute Statistic: {final_value:.6f}')
+                label=f'Equilibrium Statistic: {final_value:.6f}')
 
     # Styling
     plt.xlabel('Iteration', fontsize=12, fontweight='bold')
@@ -320,11 +320,11 @@ def main():
 
         print("\n" + "=" * 60)
 
-        # Calculate absolute statistic
+        # Calculate equilibrium statistic
         result, history = equilibrium_statistic(data, epsilon, show_graph=show_graph)
 
         print("=" * 60)
-        print(f"🏆 FINAL RESULT: The Absolute Statistic is {round(result, 6)}")
+        print(f"🏆 FINAL RESULT: The Equilibrium Statistic is {round(result, 6)}")
 
         # Show graph if requested
         if show_graph:
