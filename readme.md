@@ -2,7 +2,7 @@
 # 🧮 Equilibrium Statistic
 
 > A recursive statistical model for central tendency convergence  
-> Developed by **Himel Das** | 🇧🇩 Bangladesh | `hello2himel@outlook.com`
+> Developed by **Himel Das** | 🇧🇩 Bangladesh | `hello2himel@proton.me`
 
 ---
 
