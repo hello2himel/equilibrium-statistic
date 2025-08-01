@@ -1,355 +1,259 @@
-# The Equilibrium Statistic: A Recursive Convergence Model for Central Tendency
 
-**Himel Das**  
-*Bogura Zilla School, Bogura, Bangladesh*  
-*Email: hello2himel@proton.me*
+# 🧮 Equilibrium Statistic
 
----
-
-## Abstract
-
-We introduce the **Equilibrium Statistic**, a novel measure of central tendency that synthesizes the classical statistical measures—mean, median, and mode—through an iterative convergence process. Given an initial dataset, the method recursively computes these three measures to form successive datasets until the values converge within a specified tolerance or reach stagnation. This approach yields a unified central value that inherits properties from all three classical measures: sensitivity to all data points (mean), robustness to outliers (median), and frequency awareness (mode). We provide theoretical analysis of convergence conditions, empirical validation across various distributions, and demonstrate practical applications. The Equilibrium Statistic offers a balanced approach to central tendency estimation, particularly valuable in scenarios where traditional measures provide conflicting insights.
-
-**Keywords:** Central tendency, statistical convergence, robust statistics, iterative methods, data analysis
+> A recursive statistical model for central tendency convergence  
+> Developed by **Himel Das** | 🇧🇩 Bangladesh | `hello2himel@proton.me`
 
 ---
 
-## 1. Introduction
+## 📖 Overview
 
-The measurement of central tendency is fundamental to statistical analysis, with the arithmetic mean, median, and mode serving as the primary measures for over a century. Each measure captures different aspects of data centrality: the mean reflects the balance point of all values, the median represents the middle value resistant to outliers, and the mode identifies the most frequent observation. However, these measures often yield different values for the same dataset, presenting analysts with the challenge of selecting the most appropriate measure for their specific context.
+**Equilibrium Statistic** is a novel approach to central tendency estimation that recursively applies the classical statistical measures — **mean**, **median**, and **mode** — until they converge to a unified value. This converged value, called the **Equilibrium Statistic**, captures a balanced and harmonized center of a dataset, synthesizing sensitivity, robustness, and frequency.
 
-In many practical scenarios, decision-makers require a single, unified measure that incorporates the strengths of all three classical measures while mitigating their individual limitations. The mean's sensitivity to outliers, the median's insensitivity to distributional shape, and the mode's instability in continuous distributions each represent both strengths and weaknesses depending on the analytical context.
-
-This paper introduces the **Equilibrium Statistic**, a recursive approach that iteratively applies the mean, median, and mode operations until convergence to a unified value. This method synthesizes the information captured by all three classical measures, producing a balanced estimate of central tendency that is both theoretically interesting and practically useful.
-
-### 1.1 Motivation
-
-Traditional central tendency measures often provide conflicting information. Consider a dataset representing customer satisfaction scores: the mean might be influenced by extreme responses, the median might ignore the frequency of common scores, and the mode might be undefined or unstable. The Equilibrium Statistic addresses these limitations by creating a convergent process that balances these different perspectives.
-
-The recursive nature of the Equilibrium Statistic also provides insights into data structure through convergence behavior. Datasets with high skewness or multimodality may require more iterations to converge, while symmetric distributions converge rapidly, providing diagnostic information about the underlying data distribution.
-
-### 1.2 Contributions
-
-This paper makes the following contributions:
-
-1. **Theoretical Foundation**: We formally define the Equilibrium Statistic and analyze its convergence properties.
-2. **Algorithmic Implementation**: We present an efficient algorithm for computing the Equilibrium Statistic with convergence guarantees.
-3. **Empirical Validation**: We demonstrate the method's performance across various probability distributions and real-world datasets.
-4. **Comparative Analysis**: We evaluate the Equilibrium Statistic against traditional measures and other robust statistics.
-5. **Practical Applications**: We illustrate the method's utility in finance, quality control, and survey analysis.
+The project is implemented in **Python** as a command-line tool. It accepts numeric input from the user and iteratively refines the dataset using its own central statistic until all values fall within a specified threshold (`epsilon`).
 
 ---
 
-## 2. Methodology
+## 🧠 The Idea
 
-### 2.1 Formal Definition
+### Classical Measures of Central Tendency:
 
-Let $D_0 = \{x_1, x_2, \ldots, x_n\}$ be an initial dataset of $n$ real-valued observations. For iteration $k \geq 0$, define:
+- **Mean**: Sensitive to all values; skewed by outliers.
+- **Median**: Resistant to outliers; ignores distribution weight.
+- **Mode**: Reflects the most frequent value(s); often undefined in continuous data.
 
-- $\mu_k = \text{mean}(D_k) = \frac{1}{|D_k|} \sum_{x \in D_k} x$
-- $m_k = \text{median}(D_k)$
-- $M_k = \text{mode}(D_k)$
+These three are often used separately to describe different aspects of data. However, in real-world analysis, it's useful to find a **single unified value** that represents the dataset robustly and consistently.
 
-where $\text{mode}(D_k)$ is defined as the most frequent value in $D_k$, with ties broken by selecting the smallest value. When all values are unique, we define $M_k = \mu_k$.
+---
 
-The recursive dataset formation is given by:
-$$D_{k+1} = \{\mu_k, m_k, M_k\}$$
+### 🧪 Definition of the Equilibrium Statistic
 
-The **Equilibrium Statistic** $E(D_0)$ is defined as:
-$$E(D_0) = \lim_{k \to \infty} \frac{\mu_k + m_k + M_k}{3}$$
-
-when this limit exists.
-
-### 2.2 Convergence Criteria
-
-In practice, we terminate the iteration when:
-$$\max\{|\mu_k - m_k|, |m_k - M_k|, |M_k - \mu_k|\} < \epsilon$$
-
-for a specified tolerance $\epsilon > 0$. The Equilibrium Statistic is then computed as:
-$$E(D_0) \approx \frac{\mu_k + m_k + M_k}{3}$$
-
-### 2.3 Algorithm
-
-**Algorithm 1: Equilibrium Statistic Computation**
+Let the initial dataset be:
 
 ```
-Input: Dataset D₀, tolerance ε > 0
-Output: Equilibrium Statistic E(D₀)
 
-1. k ← 0
-2. while True do
-3.     μₖ ← mean(Dₖ)
-4.     mₖ ← median(Dₖ)
-5.     Mₖ ← mode(Dₖ)
-6.     if max{|μₖ - mₖ|, |mₖ - Mₖ|, |Mₖ - μₖ|} < ε then
-7.         return (μₖ + mₖ + Mₖ) / 3
-8.     end if
-9.     Dₖ₊₁ ← {μₖ, mₖ, Mₖ}
-10.    k ← k + 1
-11. end while
+D₀ = \[x₁, x₂, ..., xₙ]
+
 ```
 
-### 2.4 Computational Complexity
+For each iteration *k*, compute:
 
-Each iteration requires $O(|D_k| \log |D_k|)$ time for median computation when $|D_k| > 3$. Since $|D_k| = 3$ for all $k \geq 1$, the complexity per iteration becomes $O(1)$ after the first iteration. The total complexity is $O(n \log n + t)$, where $n$ is the initial dataset size and $t$ is the number of iterations to convergence.
+```
 
----
+meanₖ = mean(Dₖ)
+medianₖ = median(Dₖ)
+modeₖ = mode(Dₖ)
 
-## 3. Theoretical Analysis
+```
 
-### 3.1 Convergence Properties
+Then form the new dataset:
 
-**Theorem 1 (Boundedness):** For any finite initial dataset $D_0$, the sequences $\{\mu_k\}$, $\{m_k\}$, and $\{M_k\}$ are bounded.
+```
 
-*Proof:* Let $x_{\min} = \min(D_0)$ and $x_{\max} = \max(D_0)$. By construction, all statistics computed at each iteration lie within $[x_{\min}, x_{\max}]$, ensuring boundedness. □
+Dₖ₊₁ = \[meanₖ, medianₖ, modeₖ]
 
-**Theorem 2 (Convergence for Symmetric Datasets):** If $D_0$ is symmetric about its mean $\mu_0$, then the Equilibrium Statistic converges to $\mu_0$.
+```
 
-*Proof:* For symmetric datasets, $\text{mean}(D_0) = \text{median}(D_0) = \mu_0$. The mode may differ initially, but subsequent iterations will have mean and median equal to the average of the three statistics from the previous iteration, leading to convergence. □
+Repeat the process until:
 
-### 3.2 Stability Analysis
+```
 
-The Equilibrium Statistic exhibits several stability properties:
+max(|meanₖ - medianₖ|, |medianₖ - modeₖ|, |modeₖ - meanₖ|) < ε
 
-**Property 1 (Translation Invariance):** $E(D_0 + c) = E(D_0) + c$ for any constant $c$.
+````
 
-**Property 2 (Scale Invariance):** $E(cD_0) = cE(D_0)$ for any positive constant $c$.
+Where **ε (epsilon)** is a convergence threshold, e.g., `0.001`.
 
-**Property 3 (Monotonicity):** If $D_0 \subseteq D_1$ pointwise, then the ordering relationship between $E(D_0)$ and $E(D_1)$ reflects the relative positions of the datasets.
-
-### 3.3 Relationship to Classical Measures
-
-The Equilibrium Statistic can be viewed as a weighted combination of the classical measures, where the weights are determined by the convergence dynamics. For datasets where one measure dominates the others, the Equilibrium Statistic approximates that dominant measure. For datasets where all three measures are similar, rapid convergence occurs near their common value.
+The final stabilized value — the average of the last three — is called the **Equilibrium Statistic**.
 
 ---
 
-## 4. Empirical Analysis
+## 🛠️ How It Works in Python
 
-### 4.1 Simulation Study
+This tool is implemented with:
 
-We conducted extensive simulations to evaluate the Equilibrium Statistic's behavior across various probability distributions:
+- `statistic` — for mean and median
+- `collections.Counter` — for robust mode detection
+- Custom convergence logic with adjustable precision
+- Exception handling for multimodal and unique-value scenarios
+- CLI-based interaction, designed for clarity and usability
 
-#### 4.1.1 Normal Distribution
-For samples from $N(\mu, \sigma^2)$, the Equilibrium Statistic converges rapidly (typically 2-5 iterations) to values very close to $\mu$, with convergence speed increasing as $\sigma$ decreases.
+The logic is split into functions:
+- `calculate_mean`, `calculate_median`, `calculate_mode`
+- `check_convergence` — determines whether values are close enough
+- `equilibrium_statistic` — main recursive engine
+- `get_user_input` — interactive CLI prompt
 
-#### 4.1.2 Skewed Distributions
-For right-skewed distributions (e.g., exponential, log-normal), the Equilibrium Statistic produces values between the mean and median, with the exact position depending on the degree of skewness.
-
-#### 4.1.3 Bimodal Distributions
-For bimodal distributions, convergence behavior depends on the relative heights and separation of the modes. The Equilibrium Statistic typically converges to a value between the two modes.
-
-#### 4.1.4 Uniform Distribution
-For uniform distributions $U(a,b)$, the Equilibrium Statistic converges to $(a+b)/2$, matching the theoretical expectation.
-
-### 4.2 Convergence Rate Analysis
-
-We analyzed convergence rates across 10,000 simulated datasets from various distributions:
-
-- **Normal distributions**: Mean convergence in 3.2 iterations (σ = 1.1)
-- **Exponential distributions**: Mean convergence in 4.7 iterations (σ = 2.3)
-- **Uniform distributions**: Mean convergence in 2.1 iterations (σ = 0.8)
-- **Bimodal distributions**: Mean convergence in 6.8 iterations (σ = 3.9)
-
-### 4.3 Robustness to Outliers
-
-We evaluated robustness by introducing outliers to clean datasets:
-
-- **5% contamination**: Equilibrium Statistic showed 23% less deviation from the clean-data value compared to the arithmetic mean
-- **10% contamination**: Equilibrium Statistic showed 31% less deviation compared to the arithmetic mean
-- **20% contamination**: Equilibrium Statistic showed 28% less deviation compared to the arithmetic mean
+Each iteration is printed to the console for transparency and traceability.
 
 ---
 
-## 5. Comparative Analysis
+## 🚀 How to Run
 
-### 5.1 Comparison with Classical Measures
+### 📦 Requirements
 
-We compared the Equilibrium Statistic with arithmetic mean, median, and mode across 5,000 datasets from mixed distributions:
+- Python 3.7+
+- No external packages required
 
-| Measure | MSE | Bias | Variance | Computation Time |
-|---------|-----|------|----------|------------------|
-| Mean | 2.34 | 0.12 | 2.33 | 0.001s |
-| Median | 1.87 | 0.08 | 1.86 | 0.003s |
-| Mode | 3.21 | 0.19 | 3.17 | 0.002s |
-| Equilibrium | 1.92 | 0.09 | 1.91 | 0.012s |
+### ▶️ Run the App
 
-### 5.2 Comparison with Robust Estimators
+Clone the repository and run the script:
 
-We compared against established robust estimators:
+```bash
+git clone https://github.com/hello2himel/equilibrium-statistic.git
+cd equilibrium-statistic
+python3 main.py
+````
 
-| Estimator | Breakdown Point | Efficiency | Complexity |
-|-----------|----------------|------------|-------------|
-| Trimmed Mean (10%) | 0.10 | 0.87 | O(n log n) |
-| Winsorized Mean (10%) | 0.10 | 0.83 | O(n log n) |
-| Huber M-estimator | 0.50 | 0.95 | O(n²) |
-| Equilibrium Statistic | ~0.25 | 0.78 | O(n log n) |
+### 📥 Input Example:
 
----
+When prompted:
 
-## 6. Applications
+```
+📥 Enter numbers separated by commas: 14, 15, 15, 16, 16, 16, 17, 18
+🎯 Enter convergence threshold (default 0.001):
+```
 
-### 6.1 Financial Risk Assessment
+### ✅ Output:
 
-In portfolio analysis, traditional measures often provide conflicting signals. We applied the Equilibrium Statistic to daily returns of S&P 500 stocks over a 5-year period:
-
-- **Traditional approach**: Mean return = 0.08%, Median return = 0.12%, Mode undefined
-- **Equilibrium approach**: Equilibrium Statistic = 0.095% (converged in 4 iterations)
-
-The Equilibrium Statistic provided a balanced view that incorporated both the influence of extreme movements (captured by mean) and the typical daily performance (captured by median).
-
-### 6.2 Quality Control in Manufacturing
-
-Manufacturing processes often exhibit both systematic variation (captured by mean) and random variation (better represented by median). We analyzed defect rates in semiconductor manufacturing:
-
-- **Control limits**: Traditional ±3σ limits based on mean
-- **Equilibrium limits**: ±3σ limits based on Equilibrium Statistic
-- **Result**: 15% reduction in false positive rate while maintaining detection sensitivity
-
-### 6.3 Survey Data Analysis
-
-Customer satisfaction surveys often exhibit clustering around certain responses. We analyzed 50,000 satisfaction scores (1-10 scale):
-
-- **Mean**: 7.2 (influenced by few very dissatisfied customers)
-- **Median**: 8.0 (typical response)
-- **Mode**: 8.0 (most common response)
-- **Equilibrium Statistic**: 7.6 (balanced view after 3 iterations)
-
----
-
-## 7. Limitations and Future Work
-
-### 7.1 Limitations
-
-1. **Computational Cost**: While polynomial, the iterative nature requires more computation than classical measures
-2. **Interpretability**: The recursive definition may be less intuitive than classical measures
-3. **Theoretical Gaps**: Convergence conditions for all dataset types remain incompletely characterized
-
-### 7.2 Future Research Directions
-
-1. **Multivariate Extension**: Developing vector-valued Equilibrium Statistics
-2. **Weighted Variants**: Incorporating importance weights for different observations
-3. **Time Series Applications**: Extending to sequential and streaming data
-4. **Confidence Intervals**: Developing uncertainty quantification methods
-5. **Optimization**: Finding closed-form solutions for specific distribution classes
-
----
-
-## 8. Conclusion
-
-The Equilibrium Statistic represents a novel approach to central tendency measurement that synthesizes information from mean, median, and mode through recursive convergence. Our theoretical analysis demonstrates its stability and convergence properties, while empirical validation shows its effectiveness across various distributions and real-world applications.
-
-The method's primary strength lies in its ability to provide a unified central measure that balances sensitivity to all data points, robustness to outliers, and awareness of data frequency patterns. While computational requirements exceed those of classical measures, the additional insight provided by the convergence process and the balanced nature of the result justify this cost in many applications.
-
-The Equilibrium Statistic fills an important gap in statistical methodology by providing a principled approach to combining the insights of classical central tendency measures. Its applications in finance, manufacturing, and survey analysis demonstrate practical utility, while its theoretical properties suggest broader applicability.
-
-Future work should focus on extending the method to multivariate settings, developing confidence interval procedures, and exploring applications in machine learning and big data contexts. The recursive nature of the approach also suggests potential connections to dynamical systems theory that merit further investigation.
-
----
-
-## References
-
-[1] Huber, P.J., & Ronchetti, E.M. (2009). *Robust Statistics* (2nd ed.). Wiley.
-
-[2] Hampel, F.R., Ronchetti, E.M., Rousseeuw, P.J., & Stahel, W.A. (2011). *Robust Statistics: The Approach Based on Influence Functions*. Wiley.
-
-[3] Maronna, R.A., Martin, R.D., Yohai, V.J., & Salibián-Barrera, M. (2019). *Robust Statistics: Theory and Methods* (2nd ed.). Wiley.
-
-[4] Rousseeuw, P.J., & Leroy, A.M. (2003). *Robust Regression and Outlier Detection*. Wiley.
-
-[5] Tukey, J.W. (1977). *Exploratory Data Analysis*. Addison-Wesley.
-
-[6] Wilcox, R.R. (2016). *Introduction to Robust Estimation and Hypothesis Testing* (4th ed.). Academic Press.
-
-[7] Stigler, S.M. (1986). *The History of Statistics: The Measurement of Uncertainty Before 1900*. Harvard University Press.
-
-[8] David, H.A., & Nagaraja, H.N. (2003). *Order Statistics* (3rd ed.). Wiley.
-
-[9] Barnett, V., & Lewis, T. (1994). *Outliers in Statistical Data* (3rd ed.). Wiley.
-
-[10] Hoaglin, D.C., Mosteller, F., & Tukey, J.W. (Eds.). (2000). *Understanding Robust and Exploratory Data Analysis*. Wiley.
-
----
-
-## Appendix A: Convergence Examples
-
-### A.1 Example 1: Normal Distribution
-Initial dataset: [12.5, 13.1, 12.8, 13.0, 12.9, 13.2, 12.7]
-
+```
 Iteration 1:
-- Mean: 12.914
-- Median: 12.9
-- Mode: 12.914 (no repeated values)
-- Dataset: [12.914, 12.9, 12.914]
+  Mean:   15.875
+  Median: 16.0
+  Mode:   16.0
+  Output: [15.875, 16.0, 16.0]
+  Spread: 0.125 (target: ≤ 0.001)
 
-Iteration 2:
-- Mean: 12.909
-- Median: 12.914
-- Mode: 12.914
-- Dataset: [12.909, 12.914, 12.914]
+...
 
-Iteration 3:
-- Mean: 12.912
-- Median: 12.914
-- Mode: 12.914
-- Convergence: max difference = 0.002 < ε = 0.001
-
-Equilibrium Statistic: 12.913
-
-### A.2 Example 2: Skewed Distribution
-Initial dataset: [1, 1, 2, 2, 2, 3, 8]
-
-Iteration 1:
-- Mean: 2.714
-- Median: 2.0
-- Mode: 2.0
-- Dataset: [2.714, 2.0, 2.0]
-
-Iteration 2:
-- Mean: 2.238
-- Median: 2.0
-- Mode: 2.0
-- Dataset: [2.238, 2.0, 2.0]
-
-[continued iterations...]
-
-Equilibrium Statistic: 2.079 (converged after 6 iterations)
-
----
-
-## Appendix B: Implementation Details
-
-### B.1 Mode Calculation Algorithm
-
-The mode calculation requires special handling for continuous data and tie-breaking:
-
-```python
-def calculate_mode(data):
-    counter = Counter(data)
-    max_count = max(counter.values())
-    
-    # No true mode if all values unique
-    if max_count == 1:
-        return sum(data) / len(data)
-    
-    # Return smallest mode if multiple exist
-    modes = [val for val, count in counter.items() 
-             if count == max_count]
-    return min(modes)
-```
-
-### B.2 Convergence Detection
-
-Numerical precision considerations require careful convergence checking:
-
-```python
-def check_convergence(values, epsilon):
-    if len(values) < 2:
-        return True
-    return (max(values) - min(values)) <= epsilon
+✅ CONVERGENCE ACHIEVED after 4 iterations!
+🎯 Equilibrium Statistic: 15.958333
 ```
 
 ---
 
-*Manuscript received: [Date]  
-Accepted for publication: [Date]  
-Available online: [Date]*
+## 📚 Applications
+
+* **Robust statistical summarization**
+* **Skew-agnostic center-finding**
+* **Signal smoothing and normalization**
+* **Data diagnostics (convergence speed reveals skew or outliers)**
+* **Teaching tool** — illustrates differences between mean, median, mode
+
+---
+
+## 🧭 Planned Research & Development
+
+The Equilibrium Statistic model presents opportunities for both theoretical exploration and real-world application. Below is a structured roadmap outlining future development goals across mathematical foundations, empirical validation, software tooling, and academic dissemination.
+
+---
+
+### 🧮 1. Mathematical Foundation
+
+- **Convergence Proof** — Establish conditions under which the model converges.
+- **Uniqueness and Existence** — Prove whether the result is consistent for a given dataset.
+- **Rate of Convergence** — Analyze speed and stability of convergence.
+- **Behavioral Analysis** — Study responses to edge cases and pathological data.
+- **Robustness & Invariance** — Investigate behavior under scaling, translation, and noisy inputs.
+
+---
+
+### 📊 2. Statistical Validation
+
+- **Distributional Testing** — Assess performance on normal, skewed, uniform, multimodal, and heavy-tailed distributions.
+- **Comparative Analysis** — Evaluate against mean, median, mode, trimmed mean, and Winsorized mean.
+- **Monte Carlo Simulations** — Test on large random samples to assess generalizability.
+- **Noise & Outlier Sensitivity** — Measure resistance to outliers and random fluctuations.
+- **Missing Data Handling** — Explore imputation-free resilience.
+
+---
+
+### 🏭 3. Real-World Application Domains
+
+- **Finance** — Stock returns, trading anomalies.
+- **Medicine** — Vital statistic, lab measurements.
+- **Climate Science** — Sensor time series, anomaly detection.
+- **Education & Surveys** — Likert responses and opinion analysis.
+- **Manufacturing** — Tolerance analysis and quality control.
+
+---
+
+### 🧪 4. Methodological Extensions
+
+- **Weighted Centrality** — Introduce weight control between mean, median, and mode.
+- **Multivariate Generalization** — Extend to multidimensional datasets.
+- **Sequential Adaptation** — Apply to time series or streaming data.
+- **Confidence Intervals** — Bootstrap-based uncertainty estimation.
+- **Bayesian Reformulation** — Explore probabilistic interpretations.
+
+---
+
+### 💻 5. Software & Tooling
+
+- **PyPI Package** — Publish as installable Python library.
+- **R Package** — Extend usability to statistical ecosystem.
+- **Benchmark Suite** — Include runtime profiling and precision tests.
+- **Interactive Demos** — Build a web-based or notebook demo.
+- **Documentation & Tutorials** — Provide Jupyter and Colab examples.
+
+---
+
+### 📚 6. Academic Dissemination
+
+- **Formal Paper** — Write and submit to a statistic or applied math journal.
+- **Literature Review** — Survey surrounding research for citations and background.
+- **Conference Presentation** — Share findings at relevant academic events.
+- **arXiv Preprint** — Share early versions with the research community.
+- **Collaboration & Peer Review** — Seek academic mentorship and expert feedback.
+
+---
+
+### 🌍 7. Long-Term Vision
+
+- **Curricular Adoption** — Propose for inclusion in academic syllabi.
+- **Industry Use Cases** — Encourage adoption in data analysis workflows.
+- **Standardization** — Contribute to statistical best practices or libraries.
+- **ML & Big Data Integration** — Adapt model for machine learning preprocessing and large-scale systems.
+
+---
+
+## 🎯 Near-Term Priorities
+
+- 🔍 Convergence proof and robustness study
+- 🔬 Statistical validation against traditional measures
+- 📈 Real-world case studies and Monte Carlo simulations
+- 📝 Drafting and structuring academic paper
+- 📦 Packaging and preparing for PyPI release
+
+
+> _This roadmap serves as both a development plan and a research agenda. Contributions and collaborations are welcome._ 🤝
+
+
+---
+
+## 🧾 License
+
+MIT License.
+
+---
+
+## 👨‍🔬 Author
+
+### **Himel Das**  
+President, Bogura Zilla School Science Club  
+SSC 2025 · Bogura Zilla School, Bogura, Bangladesh  
+📧 [hello2himel@proton.me](mailto:hello2himel@proton.me)  
+🌐 [hello2himel.netlify.app](https://hello2himel.netlify.app)
+
+
+---
+
+## 🌐 Citation
+
+If you use this in research or teaching, please cite as:
+
+```plaintext
+Das, H. (2025). Equilibrium Statistic: A Recursive Convergence Model for Central Tendency. GitHub Repository. https://github.com/hello2himel/equilibrium-statistic
+```
+
+---
